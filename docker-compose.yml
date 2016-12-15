@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+
+  wordpress:
+    container_name: wordpress
+    build: $PWD/docker/wordpress_php56
+    depends_on:
+      - "mysql"
+      - "mailcatcher"
+    ports:
+      - 80:80
+    links:
+      - mysql:mysql
+      - mailcatcher:mailcatcher
+    volumes:
+      - ./:/plugin
+    environment:
+      WORDPRESS_DB_PASSWORD: root
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+
+  mailcatcher:
+    image: pocari/mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025
